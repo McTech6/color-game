@@ -1,5 +1,6 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
+import ReactGA from "react-ga4"; // Use the new package
 
 function App() {
   const colors = [
@@ -13,7 +14,10 @@ function App() {
   const [score, setScore] = useState(0);
   const [showColorBox, setShowColorBox] = useState(false);
 
+  // Initialize Google Analytics with your Tracking ID
   useEffect(() => {
+    ReactGA.initialize("G-8TKP2XVB06"); // Replace with your GA4 Tracking ID
+    ReactGA.send("pageview"); // Track page view
     startNewGame();
   }, []);
 
@@ -24,6 +28,13 @@ function App() {
     setColorOptions(options);
     setGameStatus("");
     setShowColorBox(false);
+
+    // Track new game start event in Google Analytics
+    ReactGA.event({
+      category: "Game",
+      action: "Start New Game",
+      label: "New Game Started",
+    });
   };
 
   const generateColorOptions = (correctColor) => {
@@ -50,9 +61,23 @@ function App() {
       setGameStatus("Correct! ");
       setScore(score + 1);
       setShowColorBox(true);
+
+      // Track correct guess event in Google Analytics
+      ReactGA.event({
+        category: "Game",
+        action: "Correct Guess",
+        label: "Player Guessed Correctly",
+      });
     } else {
       setGameStatus("Wrong! ");
       setShowColorBox(false);
+
+      // Track incorrect guess event in Google Analytics
+      ReactGA.event({
+        category: "Game",
+        action: "Wrong Guess",
+        label: "Player Guessed Incorrectly",
+      });
     }
   };
 
